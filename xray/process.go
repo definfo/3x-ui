@@ -17,24 +17,26 @@ import (
 	"x-ui/util/common"
 )
 
-func GetBinaryName() string {
-	return fmt.Sprintf("xray-%s-%s", runtime.GOOS, runtime.GOARCH)
-}
-
 func GetBinaryPath() string {
-	return config.GetBinFolderPath() + "/" + GetBinaryName()
+	xrayBinPath := os.Getenv("XRAY_BIN_PATH")
+	if xrayBinPath != "" {
+		return xrayBinPath
+	} else {
+		// Fall back to the original naming scheme
+		return config.GetBinFolderPath() + "/" + fmt.Sprintf("xray-%s-%s", runtime.GOOS, runtime.GOARCH)
+	}
 }
 
 func GetConfigPath() string {
-	return config.GetBinFolderPath() + "/config.json"
+	return config.GetDataFolderPath() + "/config.json"
 }
 
 func GetGeositePath() string {
-	return config.GetBinFolderPath() + "/geosite.dat"
+	return config.GetDataFolderPath() + "/geosite.dat"
 }
 
 func GetGeoipPath() string {
-	return config.GetBinFolderPath() + "/geoip.dat"
+	return config.GetDataFolderPath() + "/geoip.dat"
 }
 
 func GetIPLimitLogPath() string {
@@ -239,7 +241,7 @@ func (p *process) Stop() error {
 	if !p.IsRunning() {
 		return errors.New("xray is not running")
 	}
-	
+
 	if runtime.GOOS == "windows" {
 		return p.cmd.Process.Kill()
 	} else {

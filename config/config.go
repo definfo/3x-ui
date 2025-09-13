@@ -57,6 +57,14 @@ func GetBinFolderPath() string {
 	return binFolderPath
 }
 
+func GetDataFolderPath() string {
+	dataFolderPath := os.Getenv("XUI_DATA_FOLDER")
+	if dataFolderPath == "" {
+		dataFolderPath = "lib"
+	}
+	return dataFolderPath
+}
+
 func getBaseDir() string {
 	exePath, err := os.Executable()
 	if err != nil {
